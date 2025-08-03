@@ -14,47 +14,14 @@ import { useAuth } from '../../contexts/AuthContext';
 const Dashboard: React.FC = () => {
   const { state } = useAuth();
 
-  const recentActivity = [
-    {
-      id: 1,
-      type: 'question',
-      title: 'Doubt in PE302 - Stress-Strain relationship',
-      author: 'Raj Kumar (2P23P042)',
-      time: '2 hours ago',
-      course: 'PE302',
-      votes: 5
-    },
-    {
-      id: 2,
-      type: 'resource',
-      title: 'PE101 - Calculus Formula Sheet',
-      author: 'Priya Sharma (2P22P018)',
-      time: '4 hours ago',
-      course: 'PE101',
-      downloads: 23
-    },
-    {
-      id: 3,
-      type: 'answer',
-      title: 'Answered: Welding defects in PE304',
-      author: 'Admin User',
-      time: '6 hours ago',
-      course: 'PE304',
-      votes: 12
-    }
-  ];
+  // Real-time activity will be fetched from API
+  const recentActivity: any[] = [];
 
-  const upcomingEvents = [
-    { id: 1, title: 'PE401 - Statistics Assignment Due', date: '2025-01-15', type: 'deadline' },
-    { id: 2, title: 'Mid-sem Exam - PE302', date: '2025-01-20', type: 'exam' },
-    { id: 3, title: 'PE505 - Lab Session', date: '2025-01-18', type: 'lab' },
-  ];
+  // Events will be fetched from API
+  const upcomingEvents: any[] = [];
 
-  const topContributors = [
-    { name: 'Arjun Patel', points: 245, badge: 'Course Expert' },
-    { name: 'Sneha Rao', points: 198, badge: 'Helper' },
-    { name: 'Vikram Singh', points: 176, badge: 'Resource Creator' },
-  ];
+  // Contributors will be fetched from API
+  const topContributors: any[] = [];
 
   return (
     <div className="space-y-6">
@@ -141,7 +108,7 @@ const Dashboard: React.FC = () => {
             </h2>
           </div>
           <div className="divide-y divide-gray-200">
-            {recentActivity.map((activity) => (
+            {recentActivity.length > 0 ? recentActivity.map((activity) => (
               <div key={activity.id} className="p-6 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -167,7 +134,13 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="p-6 text-center text-gray-500">
+                <MessageSquare className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <p>No recent activity</p>
+                <p className="text-sm">Start by asking a question or sharing a resource!</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -182,7 +155,7 @@ const Dashboard: React.FC = () => {
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              {topContributors.map((contributor, index) => (
+              {topContributors.length > 0 ? topContributors.map((contributor, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-medium ${
@@ -199,7 +172,13 @@ const Dashboard: React.FC = () => {
                     {contributor.points} pts
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center text-gray-500">
+                  <Users className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                  <p>No contributors yet</p>
+                  <p className="text-sm">Be the first to contribute!</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -212,7 +191,7 @@ const Dashboard: React.FC = () => {
               </h2>
             </div>
             <div className="p-6 space-y-4">
-              {upcomingEvents.map((event) => (
+              {upcomingEvents.length > 0 ? upcomingEvents.map((event) => (
                 <div key={event.id} className="flex items-start space-x-3">
                   <div className={`p-1 rounded ${
                     event.type === 'deadline' ? 'bg-red-100' :
@@ -228,7 +207,13 @@ const Dashboard: React.FC = () => {
                     <p className="text-xs text-gray-500">{event.date}</p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center text-gray-500">
+                  <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                  <p>No upcoming events</p>
+                  <p className="text-sm">Check back later for updates!</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

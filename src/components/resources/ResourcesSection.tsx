@@ -38,83 +38,10 @@ const ResourcesSection: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'newest' | 'popular' | 'rating'>('newest');
 
-  // Mock resources data
-  const mockResources: Resource[] = [
-    {
-      _id: '1',
-      title: 'PE101 - Calculus Formula Sheet',
-      description: 'Comprehensive formula sheet covering differentiation, integration, and applications of calculus.',
-      type: 'pdf',
-      fileUrl: 'https://example.com/calculus-formulas.pdf',
-      courseCode: 'PE101',
-      courseName: 'Calculus and its Applications',
-      semester: 1,
-      uploader: 'Priya Sharma',
-      uploaderId: '2',
-      downloads: 89,
-      rating: 4.8,
-      reviews: 15,
-      tags: ['formulas', 'calculus', 'reference', 'differentiation', 'integration'],
-      uploadDate: new Date('2025-01-09T14:20:00'),
-      fileSize: '2.4 MB'
-    },
-    {
-      _id: '2',
-      title: 'PE302 - Stress-Strain Diagrams',
-      description: 'Collection of stress-strain diagrams for different materials including steel, aluminum, and composites.',
-      type: 'pdf',
-      fileUrl: 'https://example.com/stress-strain-diagrams.pdf',
-      courseCode: 'PE302',
-      courseName: 'Strength of Materials',
-      semester: 3,
-      uploader: 'Arjun Patel',
-      uploaderId: '3',
-      downloads: 67,
-      rating: 4.6,
-      reviews: 12,
-      tags: ['stress', 'strain', 'materials', 'diagrams', 'steel', 'aluminum'],
-      uploadDate: new Date('2025-01-08T10:15:00'),
-      fileSize: '1.8 MB'
-    },
-    {
-      _id: '3',
-      title: 'PE304 - Welding Techniques Video',
-      description: 'Step-by-step video tutorial covering basic welding techniques including MIG, TIG, and Arc welding.',
-      type: 'video',
-      fileUrl: 'https://example.com/welding-techniques.mp4',
-      courseCode: 'PE304',
-      courseName: 'Welding Technology',
-      semester: 3,
-      uploader: 'Dr. Rajesh Kumar',
-      uploaderId: '4',
-      downloads: 123,
-      rating: 4.9,
-      reviews: 28,
-      tags: ['welding', 'techniques', 'MIG', 'TIG', 'arc-welding', 'practical'],
-      uploadDate: new Date('2025-01-07T16:30:00'),
-      fileSize: '45.2 MB'
-    },
-    {
-      _id: '4',
-      title: 'PE401 - Statistics Problem Set',
-      description: 'Practice problems with solutions for probability and statistical methods. Includes hypothesis testing and regression analysis.',
-      type: 'pdf',
-      fileUrl: 'https://example.com/statistics-problems.pdf',
-      courseCode: 'PE401',
-      courseName: 'Probability and Statistical Methods',
-      semester: 4,
-      uploader: 'Sneha Rao',
-      uploaderId: '5',
-      downloads: 45,
-      rating: 4.5,
-      reviews: 8,
-      tags: ['statistics', 'probability', 'problems', 'solutions', 'hypothesis-testing'],
-      uploadDate: new Date('2025-01-06T11:45:00'),
-      fileSize: '3.1 MB'
-    }
-  ];
+  // Resources will be fetched from API
+  const resources: Resource[] = [];
 
-  const filteredResources = mockResources.filter(resource => {
+  const filteredResources = resources.filter(resource => {
     const semesterMatch = !selectedSemester || resource.semester === selectedSemester;
     const typeMatch = selectedType === 'all' || resource.type === selectedType;
     const searchMatch = !searchTerm || 
@@ -191,7 +118,7 @@ const ResourcesSection: React.FC = () => {
               <BookOpen className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{mockResources.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{resources.length}</p>
               <p className="text-sm text-gray-600">Total Resources</p>
             </div>
           </div>
@@ -203,7 +130,7 @@ const ResourcesSection: React.FC = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {mockResources.reduce((sum, r) => sum + r.downloads, 0)}
+                {resources.reduce((sum, r) => sum + r.downloads, 0)}
               </p>
               <p className="text-sm text-gray-600">Total Downloads</p>
             </div>
@@ -216,7 +143,7 @@ const ResourcesSection: React.FC = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {(mockResources.reduce((sum, r) => sum + r.rating, 0) / mockResources.length).toFixed(1)}
+                {resources.length > 0 ? (resources.reduce((sum, r) => sum + r.rating, 0) / resources.length).toFixed(1) : '0.0'}
               </p>
               <p className="text-sm text-gray-600">Avg Rating</p>
             </div>
@@ -229,7 +156,7 @@ const ResourcesSection: React.FC = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {new Set(mockResources.map(r => r.courseCode)).size}
+                {new Set(resources.map(r => r.courseCode)).size}
               </p>
               <p className="text-sm text-gray-600">Courses Covered</p>
             </div>
@@ -297,7 +224,7 @@ const ResourcesSection: React.FC = () => {
 
       {/* Resources Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedResources.map((resource) => (
+        {sortedResources.length > 0 ? sortedResources.map((resource) => (
           <div key={resource._id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="p-6">
               {/* Resource Header */}
@@ -366,16 +293,14 @@ const ResourcesSection: React.FC = () => {
               </div>
             </div>
           </div>
-        ))}
-      </div>
-
-      {sortedResources.length === 0 && (
+        )) : (
         <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
           <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No resources found</h3>
           <p className="text-gray-600">Try adjusting your filters or be the first to upload a resource!</p>
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

@@ -70,12 +70,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Mock user data
       const mockUser: User = {
         _id: '1',
-        rollNumber: credentials.identifier.startsWith('2P') ? credentials.identifier : undefined,
+        rollNumber: credentials.identifier.match(/^\d{2}P\d{3}$/) ? credentials.identifier : undefined,
         staffId: credentials.identifier.startsWith('STAFF') ? credentials.identifier : undefined,
         email: `${credentials.identifier}@college.edu`,
-        name: credentials.identifier.startsWith('2P') ? 'Student User' : 'Admin User',
-        batch: credentials.identifier.startsWith('2P') ? '2023-2027' : undefined,
-        role: credentials.identifier.startsWith('2P') ? 'student' : 'admin',
+        name: credentials.identifier.match(/^\d{2}P\d{3}$/) ? 'Student User' : 'Admin User',
+        batch: credentials.identifier.match(/^\d{2}P\d{3}$/) ? getBatchFromRollNumber(credentials.identifier) : undefined,
+        role: credentials.identifier.match(/^\d{2}P\d{3}$/) ? 'student' : 'admin',
         points: 150,
         contributions: 8,
         badges: ['First Post', 'Helper'],
@@ -134,6 +134,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </AuthContext.Provider>
   );
+};
+
+const getBatchFromRollNumber = (rollNumber: string): string => {
+  const year = parseInt(rollNumber.substring(0, 2));
+  const startYear = 2000 + year;
+  const endYear = startYear + 4;
+  return `${startYear}-${endYear}`;
 };
 
 export const useAuth = () => {

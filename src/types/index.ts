@@ -1,6 +1,6 @@
 export interface User {
   _id: string;
-  rollNumber?: string;
+  rollNumber?: string; // Format: 22P101, 23P101, 24P101, 25P101
   staffId?: string;
   email: string;
   name: string;

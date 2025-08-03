@@ -29,81 +29,8 @@ const LeaderboardSection: React.FC = () => {
   const [timeframe, setTimeframe] = useState<'all-time' | 'monthly' | 'weekly'>('all-time');
   const [category, setCategory] = useState<'overall' | 'batch' | 'course'>('overall');
 
-  // Mock leaderboard data
-  const mockUsers: LeaderUser[] = [
-    {
-      _id: '1',
-      name: 'Arjun Patel',
-      rollNumber: '2P22P015',
-      batch: '2022-2026',
-      points: 245,
-      contributions: 32,
-      badges: ['Course Expert', 'Helper', 'Resource Creator'],
-      rank: 1,
-      weeklyPoints: 45,
-      monthlyPoints: 120
-    },
-    {
-      _id: '2',
-      name: 'Priya Sharma',
-      rollNumber: '2P22P018',
-      batch: '2022-2026',
-      points: 198,
-      contributions: 28,
-      badges: ['Helper', 'Resource Creator', 'Active Contributor'],
-      rank: 2,
-      weeklyPoints: 38,
-      monthlyPoints: 95
-    },
-    {
-      _id: '3',
-      name: 'Vikram Singh',
-      rollNumber: '2P23P087',
-      batch: '2023-2027',
-      points: 176,
-      contributions: 22,
-      badges: ['Resource Creator', 'First Answer'],
-      rank: 3,
-      weeklyPoints: 22,
-      monthlyPoints: 76
-    },
-    {
-      _id: '4',
-      name: 'Sneha Rao',
-      rollNumber: '2P22P052',
-      batch: '2022-2026',
-      points: 165,
-      contributions: 25,
-      badges: ['Helper', 'Active Contributor'],
-      rank: 4,
-      weeklyPoints: 31,
-      monthlyPoints: 82
-    },
-    {
-      _id: '5',
-      name: 'Raj Kumar',
-      rollNumber: '2P23P042',
-      batch: '2023-2027',
-      points: 150,
-      contributions: 18,
-      badges: ['First Post', 'Helper'],
-      rank: 5,
-      weeklyPoints: 15,
-      monthlyPoints: 58
-    },
-    {
-      _id: '6',
-      name: 'Current User',
-      rollNumber: state.user?.rollNumber || '2P23P001',
-      batch: '2023-2027',
-      points: state.user?.points || 150,
-      contributions: state.user?.contributions || 8,
-      badges: state.user?.badges || ['First Post', 'Helper'],
-      rank: 24,
-      weeklyPoints: 12,
-      monthlyPoints: 35
-    }
-  ];
+  // Leaderboard data will be fetched from API
+  const users: LeaderUser[] = [];
 
   const getPointsForTimeframe = (user: LeaderUser): number => {
     switch (timeframe) {
@@ -113,7 +40,7 @@ const LeaderboardSection: React.FC = () => {
     }
   };
 
-  const sortedUsers = [...mockUsers].sort((a, b) => {
+  const sortedUsers = [...users].sort((a, b) => {
     const aPoints = getPointsForTimeframe(a);
     const bPoints = getPointsForTimeframe(b);
     return bPoints - aPoints;
@@ -141,10 +68,10 @@ const LeaderboardSection: React.FC = () => {
   };
 
   const achievements = [
-    { icon: Trophy, label: 'Top Contributor', value: topUsers[0]?.name || 'N/A' },
-    { icon: TrendingUp, label: 'Most Active This Week', value: sortedUsers.sort((a, b) => b.weeklyPoints - a.weeklyPoints)[0]?.name || 'N/A' },
-    { icon: Star, label: 'Helpful Member', value: topUsers.find(u => u.badges.includes('Helper'))?.name || 'N/A' },
-    { icon: Target, label: 'Course Expert', value: topUsers.find(u => u.badges.includes('Course Expert'))?.name || 'N/A' },
+    { icon: Trophy, label: 'Top Contributor', value: topUsers[0]?.name || 'No data yet' },
+    { icon: TrendingUp, label: 'Most Active This Week', value: sortedUsers.sort((a, b) => b.weeklyPoints - a.weeklyPoints)[0]?.name || 'No data yet' },
+    { icon: Star, label: 'Helpful Member', value: topUsers.find(u => u.badges.includes('Helper'))?.name || 'No data yet' },
+    { icon: Target, label: 'Course Expert', value: topUsers.find(u => u.badges.includes('Course Expert'))?.name || 'No data yet' },
   ];
 
   return (
@@ -245,7 +172,7 @@ const LeaderboardSection: React.FC = () => {
         
         <div className="flex items-end justify-center space-x-4 mb-8">
           {/* Second Place */}
-          {topUsers[1] && (
+          {topUsers[1] ? (
             <div className="text-center">
               <div className={`w-20 h-16 ${getRankBadgeColor(2)} rounded-t-lg flex items-center justify-center mb-3`}>
                 <Medal className="h-8 w-8 text-white" />
@@ -256,10 +183,10 @@ const LeaderboardSection: React.FC = () => {
                 <p className="text-lg font-bold text-gray-700 mt-2">{getPointsForTimeframe(topUsers[1])}</p>
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* First Place */}
-          {topUsers[0] && (
+          {topUsers[0] ? (
             <div className="text-center">
               <div className={`w-24 h-20 ${getRankBadgeColor(1)} rounded-t-lg flex items-center justify-center mb-3`}>
                 <Crown className="h-10 w-10 text-white" />
@@ -270,10 +197,20 @@ const LeaderboardSection: React.FC = () => {
                 <p className="text-xl font-bold text-yellow-600 mt-2">{getPointsForTimeframe(topUsers[0])}</p>
               </div>
             </div>
+          ) : (
+            <div className="text-center">
+              <div className="w-24 h-20 bg-gray-200 rounded-t-lg flex items-center justify-center mb-3">
+                <Trophy className="h-10 w-10 text-gray-400" />
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-500">No leader yet</h3>
+                <p className="text-sm text-gray-400">Be the first!</p>
+              </div>
+            </div>
           )}
 
           {/* Third Place */}
-          {topUsers[2] && (
+          {topUsers[2] ? (
             <div className="text-center">
               <div className={`w-20 h-16 ${getRankBadgeColor(3)} rounded-t-lg flex items-center justify-center mb-3`}>
                 <Award className="h-8 w-8 text-white" />
@@ -284,7 +221,7 @@ const LeaderboardSection: React.FC = () => {
                 <p className="text-lg font-bold text-gray-700 mt-2">{getPointsForTimeframe(topUsers[2])}</p>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -308,7 +245,7 @@ const LeaderboardSection: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {topUsers.map((user) => (
+              {topUsers.length > 0 ? topUsers.map((user) => (
                 <tr key={user._id} className={`hover:bg-gray-50 ${user.rollNumber === state.user?.rollNumber ? 'bg-blue-50' : ''}`}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -342,7 +279,15 @@ const LeaderboardSection: React.FC = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-lg font-medium">No rankings yet</p>
+                    <p>Start contributing to appear on the leaderboard!</p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

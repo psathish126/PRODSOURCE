@@ -36,9 +36,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchResults }) => {
   };
 
   const mockNotifications = [
-    { id: 1, title: 'New answer to your question', content: 'PE101 - Calculus doubt resolved', time: '2 hours ago', read: false },
-    { id: 2, title: 'Achievement unlocked!', content: 'You earned the "Helper" badge', time: '1 day ago', read: false },
-    { id: 3, title: 'New resource uploaded', content: 'PE302 - Strength of Materials notes', time: '2 days ago', read: true },
+    // Notifications will be fetched from API
   ];
 
   return (
@@ -62,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchResults }) => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search courses, questions, resources... (e.g., PE101)"
+                placeholder="Search courses, questions, resources... (e.g., PE101, PE302)"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -108,9 +106,11 @@ const Header: React.FC<HeaderProps> = ({ onSearchResults }) => {
                 className="p-2 text-gray-400 hover:text-gray-600 transition-colors relative"
               >
                 <Bell className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                  2
-                </span>
+                {mockNotifications.filter(n => !n.read).length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {mockNotifications.filter(n => !n.read).length}
+                  </span>
+                )}
               </button>
 
               {showNotifications && (
@@ -119,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({ onSearchResults }) => {
                     <h3 className="font-semibold text-gray-900">Notifications</h3>
                   </div>
                   <div className="max-h-64 overflow-y-auto">
-                    {mockNotifications.map((notification) => (
+                    {mockNotifications.length > 0 ? mockNotifications.map((notification) => (
                       <div
                         key={notification.id}
                         className={`p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 ${
@@ -130,7 +130,12 @@ const Header: React.FC<HeaderProps> = ({ onSearchResults }) => {
                         <p className="text-sm text-gray-600 mt-1">{notification.content}</p>
                         <p className="text-xs text-gray-400 mt-2">{notification.time}</p>
                       </div>
-                    ))}
+                    )) : (
+                      <div className="p-4 text-center text-gray-500">
+                        <Bell className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                        <p>No notifications</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

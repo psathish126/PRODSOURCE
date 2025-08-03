@@ -17,98 +17,10 @@ const ForumSection: React.FC = () => {
   const [selectedSemester, setSelectedSemester] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock posts data
-  const mockPosts: Post[] = [
-    {
-      _id: '1',
-      type: 'question',
-      authorId: '1',
-      author: {
-        _id: '1',
-        name: 'Raj Kumar',
-        email: 'raj@college.edu',
-        rollNumber: '2P23P042',
-        role: 'student',
-        points: 75,
-        contributions: 3,
-        badges: ['First Post'],
-        preferences: { theme: 'light', notifications: true, offlineMode: false },
-        created: new Date(),
-        lastActive: new Date(),
-      },
-      subjectId: '16',
-      subject: courses.find(c => c._id === '16')!,
-      title: 'Doubt in PE302 - Stress-Strain relationship',
-      content: 'I am having trouble understanding the relationship between stress and strain in different materials. Can someone explain with examples?',
-      fileUrls: [],
-      tags: ['stress', 'strain', 'materials'],
-      status: 'approved',
-      views: 24,
-      votes: 5,
-      comments: [],
-      created: new Date('2025-01-10T10:30:00'),
-    },
-    {
-      _id: '2',
-      type: 'resource',
-      authorId: '2',
-      author: {
-        _id: '2',
-        name: 'Priya Sharma',
-        email: 'priya@college.edu',
-        rollNumber: '2P22P018',
-        role: 'student',
-        points: 120,
-        contributions: 8,
-        badges: ['Helper', 'Resource Creator'],
-        preferences: { theme: 'light', notifications: true, offlineMode: false },
-        created: new Date(),
-        lastActive: new Date(),
-      },
-      subjectId: '1',
-      subject: courses.find(c => c._id === '1')!,
-      title: 'PE101 - Calculus Formula Sheet',
-      content: 'Comprehensive formula sheet for calculus covering all important formulas and theorems.',
-      fileUrls: ['https://example.com/calculus-formulas.pdf'],
-      tags: ['calculus', 'formulas', 'reference'],
-      status: 'approved',
-      views: 89,
-      votes: 15,
-      comments: [],
-      created: new Date('2025-01-09T14:20:00'),
-    },
-    {
-      _id: '3',
-      type: 'question',
-      authorId: '3',
-      author: {
-        _id: '3',
-        name: 'Arjun Patel',
-        email: 'arjun@college.edu',
-        rollNumber: '2P23P015',
-        role: 'student',
-        points: 200,
-        contributions: 12,
-        badges: ['Course Expert', 'Helper'],
-        preferences: { theme: 'light', notifications: true, offlineMode: false },
-        created: new Date(),
-        lastActive: new Date(),
-      },
-      subjectId: '18',
-      subject: courses.find(c => c._id === '18')!,
-      title: 'Welding defects in PE304 - Common causes?',
-      content: 'What are the most common welding defects and their causes? Preparing for upcoming lab session.',
-      fileUrls: [],
-      tags: ['welding', 'defects', 'lab'],
-      status: 'approved',
-      views: 42,
-      votes: 8,
-      comments: [],
-      created: new Date('2025-01-08T16:45:00'),
-    },
-  ];
+  // Posts will be fetched from API
+  const posts: Post[] = [];
 
-  const filteredPosts = mockPosts.filter(post => {
+  const filteredPosts = posts.filter(post => {
     const typeMatch = selectedType === 'all' || post.type === selectedType;
     const semesterMatch = !selectedSemester || post.subject.semester === selectedSemester;
     const searchMatch = !searchTerm || 
@@ -201,7 +113,7 @@ const ForumSection: React.FC = () => {
 
       {/* Posts List */}
       <div className="space-y-4">
-        {filteredPosts.map((post) => (
+        {filteredPosts.length > 0 ? filteredPosts.map((post) => (
           <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="p-6">
               {/* Post Header */}
@@ -273,9 +185,7 @@ const ForumSection: React.FC = () => {
               </div>
             </div>
           </div>
-        ))}
-
-        {filteredPosts.length === 0 && (
+        )) : (
           <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
             <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No posts found</h3>

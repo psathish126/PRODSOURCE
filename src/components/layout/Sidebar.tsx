@@ -86,15 +86,34 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSectionChange }) => 
         {/* Semester Filter */}
         <div className="mt-6">
           <h3 className="text-sm font-medium text-gray-900 mb-3">Filter by Semester</h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
               <button
                 key={sem}
-                className="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+                className="px-2 py-1 text-xs border border-gray-300 rounded hover:bg-blue-50 hover:border-blue-300 transition-colors"
               >
                 Sem {sem}
               </button>
             ))}
+          </div>
+          
+          {/* Course Categories */}
+          <div className="mt-4">
+            <h4 className="text-xs font-medium text-gray-700 mb-2">Categories</h4>
+            <div className="space-y-1">
+              <button className="w-full text-left px-2 py-1 text-xs text-gray-600 hover:bg-blue-50 rounded transition-colors">
+                Core Subjects
+              </button>
+              <button className="w-full text-left px-2 py-1 text-xs text-gray-600 hover:bg-blue-50 rounded transition-colors">
+                Professional Electives
+              </button>
+              <button className="w-full text-left px-2 py-1 text-xs text-gray-600 hover:bg-blue-50 rounded transition-colors">
+                Open Electives
+              </button>
+              <button className="w-full text-left px-2 py-1 text-xs text-gray-600 hover:bg-blue-50 rounded transition-colors">
+                Language Electives
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -75,13 +75,13 @@ const LoginForm: React.FC = () => {
                   name="identifier"
                   value={formData.identifier}
                   onChange={handleChange}
-                  placeholder="e.g., 2P23P001 or STAFF123"
+                  placeholder="e.g., 22P101 or STAFF123"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Students: Use your roll number (2P23P001) • Admins: Use staff ID (STAFF123)
+                Students: Use your roll number (22P101, 23P101, etc.) • Admins: Use staff ID (STAFF123)
               </p>
             </div>
 
@@ -133,7 +133,7 @@ const LoginForm: React.FC = () => {
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</h3>
             <div className="space-y-1 text-xs text-gray-600">
-              <p><strong>Student:</strong> 2P23P001 / password</p>
+              <p><strong>Student:</strong> 22P101 / password</p>
               <p><strong>Admin:</strong> STAFF123 / password</p>
             </div>
           </div>
